@@ -29,3 +29,18 @@
 #### ADAM Classes
 
 - [Subject-Level [ADSL]](/Files/CDISC/ADAM/Subject-Level.md)
+
+## R
+
+### Theory
+
+- [Basics](/Files/R/Notes/Basic.md)
+- [Data visualization](/Files/R/Notes/Data%20visualization.md)
+- [Data transformation](/Files/R/Notes/Data%20transformation.md)
+
+### Cheat sheets
+
+- [RStudio IDE](/Files/R/Cheat%20sheets/rstudio-ide.pdf)
+- [Basic](/Files/R/Cheat%20sheets/base-r.pdf)
+- [ggplot](/Files/R/Cheat%20sheets/data-visualization.pdf)
+- [dplyr](/Files/R/Cheat%20sheets/data-transformation.pdf)
