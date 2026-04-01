@@ -1,41 +1,137 @@
-# Data visualization
+# R — Візуалізація даних (ggplot2)
+
+## Зміст
+- [Підключення пакетів](#підключення-пакетів)
+- [Як влаштований ggplot2](#як-влаштований-ggplot2)
+- [Основні компоненти](#основні-компоненти)
+- [Повний приклад](#повний-приклад)
+
+---
+
+## Підключення пакетів
 
 ```r
-library(tidyverse)
-library(palmerpenguins)
-library(ggthemes)
+library(tidyverse)       # включає ggplot2
+library(palmerpenguins)  # датасет penguins для прикладів
+library(ggthemes)        # додаткові теми, зокрема scale_color_colorblind()
 ```
 
-## Intro
+---
 
-With ggplot2, you begin a plot with the function **ggplot()**.
+## Як влаштований ggplot2
 
-The **mapping** argument defines how variables in your dataset are
-mapped to visual properties (**aesthetics**) of your plot.
+ggplot2 будує графік шарами. Кожен шар додається через `+`. Мінімальний графік складається з трьох речей:
 
-We need to define a **geom**: the geometrical object that a plot uses to
-represent data. These geometric objects are available with functions
-that start with **geom\_**
+1. **Дані** — який датасет використовуємо (`data = ...`)
+2. **Aesthetics (aes)** — яка колонка відповідає якій візуальній властивості (`mapping = aes(...)`)
+3. **Geom** — яким геометричним об'єктом відображаємо дані (`geom_*()`)
 
-We can improve the labels of our plot using the **labs()**.
+```
+ggplot(data, mapping = aes(...)) +
+  geom_*() +
+  labs() +
+  ...
+```
 
-To facet your plot by a single variable, use **facet_wrap()**.
+---
+
+## Основні компоненти
+
+### `ggplot()` — ініціалізація графіка
+
+Перша функція у будь-якому ggplot-графіку. Визначає дані і глобальний `aes` (успадковується всіма шарами).
+
+```r
+ggplot(data = penguins, mapping = aes(x = flipper_length_mm, y = body_mass_g))
+```
+
+### `aes()` — aesthetics (маппінг змінних)
+
+Визначає, яка змінна відповідає якій візуальній властивості. Можна задавати глобально (в `ggplot()`) або локально (в окремому `geom_*()`).
+
+| Властивість | Що контролює |
+|-------------|--------------|
+| `x`, `y` | позиція на осях |
+| `color` / `colour` | колір контуру / точок / ліній |
+| `fill` | колір заливки (для барів, боксплотів тощо) |
+| `shape` | форма точки |
+| `size` | розмір |
+| `alpha` | прозорість |
+| `linetype` | тип лінії |
+
+> **Важливо:** `aes()` використовується, коли властивість залежить від даних. Якщо хочеш задати фіксований колір — пиши поза `aes()`: `geom_point(color = "blue")`.
+
+### `geom_*()` — геометричні об'єкти
+
+Визначає тип графіка. Найпоширеніші:
+
+| Функція | Тип графіка |
+|---------|-------------|
+| `geom_point()` | точковий (scatter plot) |
+| `geom_line()` | лінійний |
+| `geom_bar()` | стовпчиковий (підраховує кількість) |
+| `geom_col()` | стовпчиковий (за значенням змінної) |
+| `geom_histogram()` | гістограма |
+| `geom_boxplot()` | боксплот |
+| `geom_smooth()` | лінія тренду / регресія |
+
+```r
+# Точки + лінія регресії на одному графіку (два шари)
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point() +
+  geom_smooth(method = "lm")  # lm = linear model
+```
+
+### `labs()` — підписи
+
+Дозволяє задати назву графіка, підзаголовок, підписи осей і легенди.
+
+```r
+labs(
+  title    = "Назва графіка",
+  subtitle = "Підзаголовок",
+  x        = "Підпис осі X",
+  y        = "Підпис осі Y",
+  color    = "Назва легенди для color",
+  shape    = "Назва легенди для shape"
+)
+```
+
+### `facet_wrap()` — розбивка на підграфіки
+
+Розбиває один графік на кілька за значеннями категоріальної змінної. Зручно для порівняння груп.
+
+```r
+facet_wrap(~island)        # окремий графік для кожного острова
+facet_wrap(~island, ncol = 2)  # в 2 колонки
+```
+
+---
+
+## Повний приклад
 
 ```r
 ggplot(
   data = penguins,
-  mapping = aes(x = flipper_length_mm, y = body_mass_g) 
-) + 
-  geom_point(mapping = aes(colour = species, shape = species)) + 
-  geom_smooth(method = "lm") + 
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  # Точки: колір і форма залежать від виду пінгвіна
+  geom_point(mapping = aes(colour = species, shape = species)) +
+  # Лінія регресії (спільна для всіх точок, бо aes без species)
+  geom_smooth(method = "lm") +
+  # Підписи
   labs(
-    title = "Body mass and flipper length",
+    title    = "Body mass and flipper length",
     subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
-    x = "Flipper length (mm)", y = "Body mass (g)",
-    color = "Species", shape = "Species"
+    x        = "Flipper length (mm)",
+    y        = "Body mass (g)",
+    color    = "Species",
+    shape    = "Species"
   ) +
+  # Палітра, доступна для людей з дальтонізмом
   scale_color_colorblind() +
+  # Окремий графік для кожного острова
   facet_wrap(~island)
 ```
 
-![](Data-visualization_files/figure-commonmark/unnamed-chunk-2-1.png)
+> **Логіка шарів:** `geom_point()` отримує `aes(colour = species)` локально — тому точки розфарбовані за видом. `geom_smooth()` не має локального `aes` — він бере глобальний `aes` з `ggplot()`, де `species` немає, тому лінія регресії одна для всіх.
