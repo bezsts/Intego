@@ -1,0 +1,19 @@
+1) Use the raw dataset DEMOG (Demographics information). Create a new dataset with new variables with the attributes (Name, Label, Type, Length, Format) as described:
+
+USUBJID (Unique Subject Identifier, char, length = 50)
+AGE         (Age, num) - as in the lecture code
+AGEU       (Age Units, char, length = 5) - as in the lecture code
+RFSTDTC  (Subject Reference Start Date/Time, char, length = 10, ISO8601) - based on VISITDT
+SEX with values 1=>M; 2=>F (Sex, char, length=1) - as in the lecture code.
+Remove duplicates, keep new variables only.
+2) Use the raw dataset RDMCODE (Randomization information). Create a new dataset with new variables with the attributes (Name, Label, Type, Length, Format) as described:
+
+USUBJID (Unique Subject Identifier, char, length = 50)
+ARM       (Description of Planned Arm, char, length = 8) - based on XTRTMT, convert to upper case
+ARMCD  (Description of Planned Arm Code, char, length = 1) - based on TRTMT;
+RANDDTC  (Randomization Date, char, length = 10, ISO8601) - based on DATERANDOMIZED;
+Keep new variables only. Sort dataset in order from earliest randomized patient to latest;
+
+3) Use dataset from Task 2. Assign unique sequence number to each patient (PTNUM, Patient Number, num), when patients are ordered by randomization date in reverse order;
+
+4) Join 2 new datasets from Task 1 and 3. Hint: use MERGE statement;

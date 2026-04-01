@@ -1,0 +1,15 @@
+Use the raw dataset AE (Adverse Events).
+
+1) Keep only STUDYID, SUBJID, AENAME, AESTART, AELINENO variables. Sort by Patient, AE Start date, AE Line Number. Derive USUBJID (as before);
+
+2) Continue processing the dataset from task 1. Find the earliest AE within a) EACH Patient; and b) within ALL Patients. Create 2 new variables to hold that information:
+a) AOCCFL (label='1st Occurrence within Subject Flag'; char; values 'Y' or missing) b) AOCCOVFL (label='1st Occurrence Overall Flag'; char; values 'Y' or missing)
+If multiple AEs occurred at the same date, take one with the minimum Line Number;
+
+3) Continue processing the dataset from task 2. Create new dataset by adding information from task 2 to raw DEMOG dataset. Process DEMOG in exactly the same way as in HW1 task 1;
+
+4) Use the raw dataset ECGPRFL1 (Electrocardiography results)
+Keep only STUDYID USUBJID VISID ECGDATE ECGDIGTM. Only keep the record with latest timepoint within each patient within each visit. Add this information to the dataset from task 3. Process dataset from task 3 in the way to still keep the information of the earliest AEs per patient and overall, but to avoid many-to-many merge ;
+
+5) Use the raw dataset ECGPRFL2 (Also Electrocardiography results).
+Keep only STUDYID USUBJID VISID ECGDATE ECGHOUR ECGDIGTM. Within each patient within each visit fill in the missing ECGDIGTM values with the LAST non-missing ECGDIGTM available. Hint: you may use RETAIN statement.

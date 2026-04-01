@@ -1,0 +1,26 @@
+1) Use raw VITALS, VITALS2. Combine assessments.
+Using PROC FREQ or MEANS find Min temperature (in Celsius) within a) overall; b) each patient. Create a dataset with 12 records and 2 variables (SUBJID as usual + 1 additional value = "OVERALL" and VSTEMP). Sort by SUBJID.
+
+2) Use raw PRIORMED.
+Using PROC FREQ count the total prior medication dose taken for each patient. Display 0 is patient didn't take a prior medication. If units are TAB or OTH assume dose = 100. Hint: use PMDOSE and PMANYMED. Keep SUBJID and create TOTDOSE (num, no label).
+
+3) Use raw EXTLABS.
+Remove laboratory tests, that:
+
+a) contain ONLY missing results;
+b) DO NOT have any numeric results;
+After that remove results with +-<> symbols. For those tests and results, that remain, consider any character result as missing. Count Mean, Median, SD, Min, Max and number of missing results for each lab test. Create dataset with SUBJID, TESTNAME, (Mean, Median, SD, Min, Max, NMiss - num, no label) variables. Sort by SUBJID, TESTNAME.
+
+4) Use raw CSFQFEML, CSFQMALE, RDMCODE.
+Count frequencies for all responses (1-5) for a) overall; b) within each treatment group. Convert responses to character (1=Bad; 2=Poor; 3=Satisfactory; 4=Good; 5=Excellent).
+Use ANY preparation steps and any procedures you like. Create dataset with following structure: ARM (standard label, $50 - full TRT Group name as in RDMCODE dataset), ARMCD (standard label, $1 - TRT Group code), QSTEST (standard label, $100 - with values "Number of '<response>' Answers" where <response> is one of {Bad; Poor; Satisfactory; Good; Excellent}), QSSTRESN (standard label, num - holds the result).
+Add one extra record for ARM/ARMCD = "Overall"/"O". Sort by ARMCD, QSTEST.
+
+5) Use raw ECG1, RDMCODE.
+Consider Heart rate and PR Duration, create dataset with the following structure:
+VISIT (standard label, $50, just set to VISID);
+VISITNUM (standard label, num, numeric part of VISID, -999 for SCRNBASE);
+ARM (standard label, $50 - full TRT Group name as in RDMCODE dataset);
+EGTESTCD (standard label, $8) - with values "ECGHRTRT" and "ECGPR";
+
+Create new variables: Mean, L_90CI, U_90CI, (for 90% CI for mean), SD, Min, Max - all num, no labels. Count them per each treatment group, parameter, visit. Round all of them to 3 digits. Sort by ARM, EGTESTCD, VISITNUM. Just in case - this is NOT going to be as per SDTM standard.

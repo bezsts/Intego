@@ -1,0 +1,12 @@
+1. Use raw dataset LABTRACK.
+Keep only SUBJID SITEID VISID LABDATE, create USUBJID. Then do the following steps, new variable names and attributes are shown in braces:
+
+Derive new variable based on LABDATE converted to ISO8601 format. (LBDTC, "Date/Time of Specimen Collection", $19);
+Derive new variable based on VISID according to the following rules: all visits prior to Day 1, including SCRNBASE will be "Screening". "DAYX" visits will be "Day X", all visits on or later than Day 40 will be "Day 40 onwards". Consider "DAY0" as something unexpected, leave missing, and print a warning or note to log. (VISIT, "Visit Name", $200);
+Assign numeric visit number, based on X in "DAYX". SCRNBASE will be -999. In case of "DAY0" leave missing. (VISITNUM, "Visit Number", num);
+Make VISID looking like "DAY X", not "DAYX".
+2. Use raw dataset DEMOG.
+Group patients by their age: create new variables AGE ("Age", num) and AAGE ("Analysis Age", $50)  with patients' age. AGE is calculated relative to the DEMOG.VISITDT. Consider full number of days, including leap year and add + 1 day when calculating the difference between dates. Create AAGE with values "<38 years" "38-<42 years" and ">=42 years". Leave single record per patient, and keep only STUDYID, SUBJID, SITEID, BIRTHDT, AGE, AAGE. Derive USUBJID.
+
+3. Use raw dataset FOLLOWUP.
+Count how many days each patient took cocaine, based on COCAIN_D variable. Create a new variable COCDAYS (no label, num). Keep only SUBJID, COCDAYS. Leave single record per patient. Add this information to the dataset from step 2.

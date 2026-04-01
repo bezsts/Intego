@@ -1,0 +1,45 @@
+1) For each patient build a planned schedule of Vital Signs assessments following standard SDTM VS structure. Assessments are: VSTESTCD = PULSE, SYSBP, DIABP. Assume patients must come to measure vital signs starting from their first dose date every day for 15 days, at 8:00, 9:00, 10:00, 11:00, 12:00, 14:00, 16:00, 20:00. Use ONLY raw INVAGT dataset.
+
+Keep SUBJID, create VSTESTCD ($8, standard label), VSDTC ($19, convert to ISO8601, standard label), VISIT = Day N, where N=1..15 ($200, standard label), VISITNUM = 1..15 (num, standard label).
+
+2) Use RAW dataset VITALS and VITALS2. Make one dataset.
+Convert Temperature to Celsius.
+Subject Characteristics are stored as variables(columns). They are Temperature, Respiration, Pulse, Blood pressure (SYS and DIA).
+Create 2 new variables:
+
+PARAMCD (label = Parameter Code length = 8 char) - to keep parameter short name values, such as TEMP, RESP, PULSE, SYSBP, DIABP.
+AVAL (label = Analysis Value length = 8 num) - to keep corresponding numeric parameter value, based on raw data result variables
+That is, you will switch from vertical representation of parameters to horizontal. Instead of having multiple columns, you'll get multiple rows.
+Keep SUBJID, PARAMCD, AVAL, create VISIT ($200, standard label), VISITNUM (num, standard label), derive VSDTC (value in ISO8601 format, $19, standard label) based on corresponding raw data values.
+
+3) Continue with just created dataset. Create 2 new variables:
+
+CHG (num, no label) - to indicate how the value of AVAL changed compared to previous assessment.
+PCHG (num, no label) - to count that change in percent.
+Example: AVAL_previous = 11, AVAL_current = 4. CHG = -7. PCHG = -63.6363..%
+Create a format and a new variable to categorize PCHG (PCHGCAT $100, no label):
+
+> 3 % as "More than 3 PCT Change"
+0 as "No change"
+from -3 to 3 % as "-3 to 3 PCT Change"
+< -3 % as "Less than -3 PCT Change".
+
+4) Use RAW dataset CSFQMALE.
+Convert all numeric answers to character as follows (create new character variables CSFQ_C1-14 $20 no label):
+
+1 - "Bad"
+2 - "Poor"
+3 - "Satisfactory"
+4 - "Good"
+5 - "Excellent"
+
+Create new variable (NUM_BAD num, no label) to indicate total number of questions that patients answered "Bad" at each visit.
+Keep SUBJID, VISID, CSFQ1-14, CSFQ_C1-14, NUM_BAD
+
+5) Follow the scheme, shown in task 1: switch from vertical representation of parameters to horizontal. Instead of having multiple columns, you'll get multiple rows. Create 3 new variables:
+
+PARAMCD (label = Parameter Code length =$8) - to keep parameter short name values, based on the question variable names ("CSFQ1-14").
+PARAM (label = Parameter length = $40) - to keep parameter full name values, based on the question variable CSFQ1-14 labels.
+AVAL (label = Analysis Value, num) - to keep corresponding numeric value of a parameter. 
+AVALC (label = Analysis Value (C) $200) - to keep corresponding character value of a parameter.. 
+Keep SUBJID, VISID and new variables.

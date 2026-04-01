@@ -1,0 +1,30 @@
+General Guidance: Create macros and try to use PROC SQL as much as possible!
+
+1) Use raw AE and MEDDRASUB.
+Find those Adverse Event Names in raw dataset AE, that don't correspond (cannot be mapped) to any LOW_LEVEL_TERM in raw dataset MEDDRASUB. Keep just 1 variable AENAME in the final dataset.
+
+2) Use raw AE.
+Create new variables – all $100 no label:
+
+AESEV based on AESEVERE. 1 = "MILD"; 2 = "MODERATE"; 3 ="SEVERE";
+AEREL based on AERELATE. 1 = "DEFINITELY"; 2 = "PROBABLY"; 3 = "POSSIBLY"; 4 = "REMOTELY"; 5 = "DEFINITELY NOT"; 6 = "UNKNOWN";
+AEOUT based on AEOUTCOM. 1= "RECOVERED/RESOLVED"; 2 = "NOT RECOVERED/NOT RESOLVED"; 3 = "RECOVERING/RESOLVING"; 4 = "RECOVERED/RESOLVED WITH SEQUELAE"; 5 = "RECOVERED/RESOLVED WITH SEQUELAE"; 6 = "FATAL"; 7 = "UNKNOWN";
+AEACN based on AEACTION. 1 = "DOSE NOT CHANGED"; 2 = "DRUG WITHDRAWN"; 3 = "DRUG INTERRUPTED"; 4 = "DOSE REDUCED"; 5 = "DOSE INCREASED"; 6 = "DRUG INTERRUPTED".
+Create a macro that can count number of patients in each treatment group with at least one:
+
+AEs With Moderate Severity
+AEs With Not Recovered/Not Resolved Outcome
+AEs Possibly Related to Treatment
+AEs With Moderate Severity and Possibly Related to Treatment
+AEs With Drug Withdrawn Action Taken
+AEs With Moderate Severity and Drug Withdrawn Action Taken
+An output of each macro call has to be a dataset with 3 variables and 2 records: CATEGORY (contains exact name of the category - just copy from LMS, $100), XTRTMT, COUNT (num). Set them altogether and sort by CATEGORY, XTRTMT. If no records fit the criterion, fill the counts with 0.
+Consider that more subsets could be added!
+
+3) Use raw datasets INVAGT and AE.
+For each Subject/Adverse event find a maximum dose number on or after which an Adverse event occurred. Keep SUBJID, AENAME, create DOSENUM (num). If an AE occurred before any of the doses, include it with DOSENUM = 0.
+
+4) Use raw AE.
+Include into final dataset only those Adverse Events, that occurred in more than 10% of patients. For example: if we have 60 PTs, and Headache occurred for 15 PTs, then it occurred for 25% of PTs. Keep AENAME, PCT (num). Round PCT to 2 digits.
+
+5) Create a macro that converts any numeric date, found in the given dataset, to character ISO8601 format. Do not impute missing or partial dates. Add converted date as a new character variable with length $20 with addition of _C to old variable name. Example: AESTOP => AESTOP_C. As the result submit the processing of raw AE dataset. Ensure your macro can process ANY dataset in RAWDATA.

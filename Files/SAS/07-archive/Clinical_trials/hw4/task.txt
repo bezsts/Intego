@@ -1,0 +1,30 @@
+For this home task DO NOT use any PROC statements (apart from SORT).
+
+1) Use raw dataset CSFQFEML. Count sum, average, median and standard deviation for all of the questions (create new variables SUM, MEAN, MEDIAN, STD numeric, no label). Compare sum to total score (TOTALSCR), and create a variable RESULT (char $50) with values "Score is OK", "Calculated score does not match TOTAL SCORE". Use IFC function. No need to create other variables, keep all variables from raw dataset.
+
+2) Use raw dataset DEMOG. Keep only SUBJID, BIRTHDT, GENDER. Keep one record per patient.
+Count patients' age compared to date 13-DEC-2025 and create numeric variable AGE, label='Age'. Create a flag with values Y/O (AGEFL char $1) to indicate the Youngest (Y) and Oldest (O) patient. Create another flag (AGESEXFL char $2) with values (YM, OM, YF, OF) to indicate youngest/oldest male and female patients. Convert GENDER variable to M (1) and F (2) format, create a new variable SEXC (char $1).
+
+3) Use raw dataset EXTLABS. Carefully go through all steps in the indicated order! Replace all occurrences of "2ND" and "3RD" in the TESTNAME with "SECOND" and "THIRD" respectively. Then keep only those records where TESTNAME contains either a) numbers or b) values "SECOND" and "THIRD".
+Extract number from Test name into a separate variable TESTNAMEN (num) in case Test Name starts with "CTDP". Convert all units and test names to upper case.
+Add "-" after 'NON' to result if it's "NONREACTIVE". Insert ":" into the proper place of Collection Time so that it follows hh:mm format. Do not derive any other variables or records.
+
+4) Use raw dataset INVAGT. Remove records, where patients administered 0 tablets.
+For each patient and each dose count how much time in hours there is between the doses. Create 2 variables: round the 1st one to 0.01, the second one must show number of full hours between the doses (ADUR - rounded and ADUR1 - full, both are num, no label).
+Create an Y/N flag (GTDAYFL char $1) to indicate if patient has more than a day between the doses. Do not derive any other variables or records.
+
+5) Use dataset __AE.
+Create 2 new variables to fill missing date parts for AESTART_C and AESTOP_C according to the following rules:
+
+For Start date:
+missing day -> 1st day of month
+missing month -> January
+missing month and day -> 1st of January
+
+For End date:
+missing day -> LAST day of month
+missing month - > December
+missing month and day -> 31st of December
+
+If after filling missing dates start date appeared beyond end date -> set start date to end date. USE INTNX function!
+New variables are AESTART_IMP and AESTOP_IMP char $10 converted to ISO8601 format. Do not derive any other variables or records.
