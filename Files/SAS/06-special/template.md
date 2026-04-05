@@ -12,8 +12,44 @@ proc datasets lib=work kill noprint;
 run;
 ```
 
-## Шаблон для SDTM домену
-Дивись → [sdtm-template.md](../05-cdisc/sdtm-template.md)
+## Шаблон для CDISC
+*****************************************
+****** Name: Stanislav             ******
+****** Program Name:       ******
+****** Date:              ******
+*****************************************
+
+****************************************************************************************************************************
+               Version history 
+Name             Version        Date         Comment
+
+****************************************************************************************************************************;
+
+dm 'odsresults; clear';	
+dm "log; clear";
+
+libname  "";
+libname out "";
+
+options missing = "";
+
+proc datasets lib=work kill noprint;
+run;
+
+%let domain = ;
+%let seqsort = ;
+
+proc sort data = &domain;
+	by &seqsort;
+run;
+
+proc contents data=&domain. varnum;
+run;
+
+data out.&domain(label = "");
+	set &domain;
+run;
+
 
 ## Шаблон для QC порівняння
 
