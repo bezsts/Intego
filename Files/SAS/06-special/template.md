@@ -13,6 +13,7 @@ run;
 ```
 
 ## Шаблон для CDISC
+```sas
 *****************************************
 ****** Name: Stanislav             ******
 ****** Program Name:       ******
@@ -49,7 +50,7 @@ run;
 data out.&domain(label = "");
 	set &domain;
 run;
-
+```
 
 ## Шаблон для QC порівняння
 
